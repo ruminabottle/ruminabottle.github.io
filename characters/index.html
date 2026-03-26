@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Characters — RumInABottle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0b;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-card-hover: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.14);
+      --text: #e4e4e7;
+      --text-secondary: #71717a;
+      --text-muted: #3f3f46;
+      --accent: #a78bfa;
+      --accent-dim: rgba(167, 139, 250, 0.1);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .page {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 4em 2em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Back link */
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 2.5em;
+      transition: color 0.25s ease;
+    }
+
+    .back:hover { color: var(--text-secondary); }
+
+    .back svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Header */
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3em;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-bottom: 2.5em;
+    }
+
+    /* Character grid */
+    .characters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1em;
+    }
+
+    .char-card {
+      display: flex;
+      align-items: center;
+      gap: 1.2em;
+      padding: 1.2em;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .char-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .char-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      filter: brightness(0.95) saturate(0.9);
+      transition: filter 0.3s ease;
+    }
+
+    .char-card:hover .char-avatar {
+      filter: brightness(1) saturate(1);
+    }
+
+    .char-info { flex: 1; min-width: 0; }
+
+    .char-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2em;
+    }
+
+    .char-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .char-tags {
+      display: flex;
+      gap: 0.4em;
+      margin-top: 0.5em;
+      flex-wrap: wrap;
+    }
+
+    .char-tag {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.2em 0.6em;
+      border-radius: 4px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid rgba(167, 139, 250, 0.1);
+    }
+
+    .char-arrow {
+      color: var(--text-muted);
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .char-arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .char-card:hover .char-arrow {
+      color: var(--text-secondary);
+      transform: translateX(3px);
+    }
+
+    /* Placeholder card for future characters */
+    .char-card.placeholder {
+      border-style: dashed;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .char-avatar-placeholder {
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .char-avatar-placeholder svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeUp 0.5s ease-out both;
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.05s; }
+    .fade-in:nth-child(2) { animation-delay: 0.1s; }
+    .fade-in:nth-child(3) { animation-delay: 0.15s; }
+    .fade-in:nth-child(4) { animation-delay: 0.2s; }
+    .fade-in:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+    @media (max-width: 640px) {
+      .page { padding: 3em 1.5em; }
+      h1 { font-size: 1.3rem; }
+      .char-avatar { width: 56px; height: 56px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a href="/" class="back fade-in">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      Back
+    </a>
+
+    <h1 class="fade-in">Characters</h1>
+    <p class="subtitle fade-in">FFXIV roleplay character profiles</p>
+
+    <div class="characters">
+      <a href="/characters/svafnir/" class="char-card fade-in">
+        <img
+          src="/characters/svafnir/images/image01.jpg"
+          alt="Svafnir Asoltun"
+          class="char-avatar"
+        />
+        <div class="char-info">
+          <div class="char-name">Svafnir Asoltun</div>
+          <div class="char-title">Hunter of the Wilds</div>
+          <div class="char-tags">
+            <span class="char-tag">Viera</span>
+            <span class="char-tag">Rava</span>
+            <span class="char-tag">Chaotic Neutral</span>
+          </div>
+        </div>
+        <div class="char-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Placeholder for future characters -->
+      <div class="char-card placeholder fade-in">
+        <div class="char-avatar-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
+        <div class="char-info">
+          <div class="char-name" style="color: var(--text-muted);">More coming soon</div>
+          <div class="char-title" style="color: var(--text-muted);">Future characters will appear here</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
